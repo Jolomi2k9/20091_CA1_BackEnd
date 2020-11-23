@@ -1,5 +1,5 @@
 const express = require('express')
-//our app will use the express node module
+//the app will use the express node module
 const app = express()
 const { MongoClient, ObjectId } = require("mongodb");
 
@@ -7,7 +7,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const url = 'mongodb://localhost:3000';
 const client = new MongoClient(url, { useUnifiedTopology: true });
  
- // Database 
+ // Database name
 const dbname = "library"; 
  
 //make use of bodyparser middleware, which allows us to parse the body of the response
@@ -131,7 +131,7 @@ async function run() {
         //connect to the database
         await client.connect();
         
-        //connect to the right database ("dealership")
+        //connect to the right database 
         db = client.db(dbname);
 
         //get reference to our book "table"
