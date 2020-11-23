@@ -4,7 +4,7 @@ const app = express()
 const { MongoClient, ObjectId } = require("mongodb");
 
 //connection to the mongodb server
-const url = 'http://localhost:3000';
+const url = 'mongodb://localhost:3000';
 const client = new MongoClient(url, { useUnifiedTopology: true });
  
  // Database name
