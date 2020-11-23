@@ -4,7 +4,7 @@ const app = express()
 const { MongoClient, ObjectId } = require("mongodb");
 
 //connection to the mongodb server
-const url = 'mongodb://localhost:3000';
+const url = 'http://localhost:3000';
 const client = new MongoClient(url, { useUnifiedTopology: true });
  
  // Database name
@@ -60,7 +60,7 @@ app.get('/book', (req,res) =>{
 app.post('/book', (req, res) =>{
     console.log('I have received a post request in the /book route');
     //create a book object
-    let book = new Book(req.body.make, req.body.model, req.body.availability, req.body.fuelType, req.body.warranty)
+    let book = new Book(req.body.title, req.body.model, req.body.availability, req.body.fuelType, req.body.warranty)
     //insert it to the database
     booksDb.insertOne(book)
     res.sendStatus(200)
@@ -76,17 +76,17 @@ app.put('/book', (req, res) => {
         //if the book is found edit it and send a message to the user
         if(foundBook !== null){
             let book = new Book(
-                foundBook.make, 
+                foundBook.title, 
                 foundBook.author, 
                 foundBook.availability, 
                 foundBook.publisher, 
                 foundBook.year)
-            // I only make 1 change, but you should update all the book variables
-            book.make = req.body.make;
+
+            book.title = req.body.title;
             book.author = req.body.author;
             book.availability = req.body.availability;
             book.year = req.body.year;
-            // console.log(book);
+            
             try{
             const updateResult = await booksDb.updateOne(
                                                 {"_id": ObjectId(req.body.id)}, 
@@ -94,7 +94,7 @@ app.put('/book', (req, res) => {
             } catch(err){
                 console.log(err.stack)
             }
-            // console.log(updateResult.modifiedCount)       
+                   
             res.send("The book was updated");            
         } else {
               //if the book is not found send a message to the user saying that this entry doe not exist
@@ -131,23 +131,24 @@ async function run() {
         //connect to the database
         await client.connect();
         
-        //connect to the right database 
+        //connect to the correct database 
         db = client.db(dbname);
 
         //get reference to our book "table"
         booksDb = db.collection("book");
 
-        //start listening to requests (get/post/etc.)
+        //start listening to requests 
         app.listen(3000);
     } catch (err) {
-        //in case we couldn't connect to our database throw the error in the console
+        //in the event we cannot connect to our database, throw an error in the console
          console.log(err.stack);
     }
 }
 
+//book class used to create book objects
 class Book {
-    constructor(make, author, availability =false, publisher, year){
-        this.make = make;
+    constructor(title, author, availability =false, publisher, year){
+        this.title = title;
         this.author = author;
         this.availability = availability;
         this.publisher = publisher;
