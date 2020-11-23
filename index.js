@@ -47,8 +47,8 @@ app.get('/book', (req,res) =>{
 
     (async ()=>{
         let books = [];
-        const carCursor = booksDb.find();
-        await carCursor.forEach(book =>{
+        const bookCursor = booksDb.find();
+        await bookCursor.forEach(book =>{
             books.push(book);
         });
         res.send(books);
